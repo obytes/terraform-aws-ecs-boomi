@@ -75,9 +75,8 @@ data "aws_iam_policy_document" "policy" {
     ]
 
     resources = [
-      aws_secretsmanager_secret.secrets.arn,
-      aws_secretsmanager_secret.parameters.arn,
-      aws_secretsmanager_secret.cloudwatch-config-file.arn
+      var.secrets["arn"],
+      var.params["arn"],
     ]
   }
 }

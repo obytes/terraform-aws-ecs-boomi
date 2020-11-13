@@ -4,11 +4,10 @@ resource "aws_launch_configuration" "lc" {
   image_id                    = data.aws_ami.ecs.id
   instance_type               = var.instance_type
   name_prefix                 = "${local.prefix}-lc"
-  key_name                    = "${local.common_tags["env"]}-${local.common_tags["project_name"]}-key"
+  key_name                    = var.key_name
 
   security_groups = [
     var.security_group_ids["default_vpc"],
-    var.security_group_ids["access_adm_ssh"]
   ]
 
 

@@ -1,20 +1,3 @@
-# s3 buckets
-output "s3_artifacts" {
-  value = {
-    id     = aws_s3_bucket.artifacts.id
-    arn    = aws_s3_bucket.artifacts.arn
-    bucket = aws_s3_bucket.artifacts.bucket
-  }
-}
-
-output "s3_settings" {
-  value = {
-    id     = aws_s3_bucket.settings.id
-    arn    = aws_s3_bucket.settings.arn
-    bucket = aws_s3_bucket.settings.bucket
-  }
-}
-
 # ecs
 output "ecs" {
   value = {
@@ -23,12 +6,33 @@ output "ecs" {
   }
 }
 
-# security groups
-output "security_group_ids" {
+output "repository_url" {
+  value = aws_ecr_repository.this.repository_url
+}
+
+output "secrets_secret_manager" {
   value = {
-    access_adm_http  = aws_security_group.adm_http.id
-    access_adm_https = aws_security_group.adm_https.id
-    access_adm_ssh   = aws_security_group.adm_ssh.id
+    name = aws_secretsmanager_secret.secrets.name
+    id = aws_secretsmanager_secret.secrets.id
+    arn = aws_secretsmanager_secret.secrets.arn
   }
 }
 
+output "parameters_secret_manager" {
+  value = {
+    name  = aws_secretsmanager_secret.parameters.name
+    id = aws_secretsmanager_secret.parameters.id
+    arn = aws_secretsmanager_secret.parameters.arn
+  }
+}
+output "kms_id" {
+  value = aws_kms_key.default.id
+}
+
+output "s3_logging" {
+  value = {
+    id = module.s3_logging.id
+    arn = module.s3_logging.arn
+    bucket = module.s3_logging.bucket
+  }
+}

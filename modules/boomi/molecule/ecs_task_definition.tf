@@ -15,7 +15,7 @@ resource "aws_ecs_task_definition" "this" {
   container_definitions = <<DEFINITION
 [
   {
-    "image": "${aws_ecr_repository.this.repository_url}:${var.common_tags["env"]}",
+    "image": "${var.repository_url}:${var.common_tags["env"]}",
     "name": "${var.container_name}",
     "networkMode": "awsvpc",
     "entryPoint": [
@@ -37,11 +37,11 @@ resource "aws_ecs_task_definition" "this" {
     "environment": [
       {
         "name": "SECRETS_ID",
-        "value": "${aws_secretsmanager_secret.secrets.id}"
+        "value": "${var.secrets["id"]}"
       },
       {
         "name": "PARAMETERS_ID",
-        "value": "${aws_secretsmanager_secret.parameters.id}"
+        "value": "${var.params["id"]}"
       },
       {
         "name": "AWS_DEFAULT_REGION",
@@ -91,58 +91,6 @@ resource "aws_ecs_task_definition" "this" {
     "dockerLabels":
       {
         "env":"${local.common_tags["env"]}"
-      },
-    "dependsOn": [
-                {
-                    "containerName": "${var.cloudwatch-container-name}",
-                    "condition": "START"
-                }
-            ]
-  },
-  {
-    "name": "${var.cloudwatch-container-name}",
-    "image": "${aws_ecr_repository.this.repository_url}:cw-agent",
-    "entryPoint": [
-      "sh", "entrypoint.sh"
-    ],
-    "command": [
-      "/opt/aws/amazon-cloudwatch-agent/bin/start-amazon-cloudwatch-agent"
-      ],
-    "environment": [
-      {
-        "name": "CONFIG_FILE_SECRET_ID",
-        "value": "${aws_secretsmanager_secret.cloudwatch-config-file.name}"
-      },
-      {
-        "name": "AWS_DEFAULT_REGION",
-        "value": "${data.aws_region.current.name}"
-      }
-    ],
-    "mountPoints": [
-        {
-            "containerPath": "/var/boomi",
-            "sourceVolume": "${local.volume_name}"
-        },
-        {
-          "containerPath": "/sys/fs/cgroup",
-          "sourceVolume": "cgroup",
-          "readOnly": true
-        }
-    ],
-    "essential": true,
-    "privileged": false,
-    "logConfiguration": {
-      "logDriver": "awslogs",
-      "options": {
-        "awslogs-group": "${aws_cloudwatch_log_group.cwa.name}",
-        "awslogs-region": "${data.aws_region.current.name}",
-        "awslogs-stream-prefix": "${local.prefix}-log"
-      }
-    },
-    "dockerLabels":
-      {
-        "env":"${local.common_tags["env"]}",
-        "name":"${var.cloudwatch-container-name}"
       }
   }
 ]

@@ -52,3 +52,19 @@ variable "cloudwatch-container-name" {
   type = string
   default = "cwa"
 }
+
+variable "repository_url" {
+  type = string
+}
+
+variable "kms_id" {
+  type = string
+}
+
+variable "secrets" {
+  type = map(string)
+}
+
+variable "params" {
+  type = map(string)
+}

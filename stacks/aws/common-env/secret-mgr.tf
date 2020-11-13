@@ -13,17 +13,6 @@ resource "aws_secretsmanager_secret_version" "parameters" {
   secret_string = jsonencode(local.parameters)
 }
 
-# AWS Agent Config File
-resource "aws_secretsmanager_secret" "cloudwatch-config-file" {
-  name = "${local.prefix}-cfg-file"
-}
-
-resource "aws_secretsmanager_secret_version" "config-file" {
-  secret_id = aws_secretsmanager_secret.cloudwatch-config-file.id
-  secret_string = templatefile(join("/", [local.templates, "config.json"]), { for key, value in local.cw_agent_config : key => value })
-}
-
-
 locals {
   # This should be the same for all containers in other for clustering to work
   parameters = {

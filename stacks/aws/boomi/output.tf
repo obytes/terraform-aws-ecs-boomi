@@ -1,15 +1,6 @@
-output "boomi_alb" {
-  value = module.molecule.alb
-}
-
 output "security_group_id" {
   value = module.molecule.security_group_id
 }
-
-output "queue_url" {
-  value = module.events.queue_url
-}
-
 
 output "credentials" {
   value = {
@@ -18,19 +9,16 @@ output "credentials" {
   }
 }
 
-output "topic_arn" {
-  value = module.events.topic_arn
+output "service_name" {
+  value = module.molecule.service_name
 }
 
-output "efs_filesystem_id" {
+output "file_system_id" {
   value = module.molecule.file_system_id
 }
 
-output "efs_access_point_id" {
+output "aws_efs_access_point" {
   value = module.molecule.aws_efs_access_point
 }
 
-output "boomi_cloudwatch_sns_arn" {
-  value = module.molecule.boomi_cloudwatch_sns_arn
-}
 

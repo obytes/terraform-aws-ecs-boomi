@@ -23,5 +23,8 @@ variable "max_size" {}
 variable "min_size" {}
 
 variable "instance_type" {
-  default = "t3.medium"
+}
+
+variable "key_name" {
+  type = string
 }

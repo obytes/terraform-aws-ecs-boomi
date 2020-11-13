@@ -10,14 +10,6 @@ variable "container_name" {
 variable "port" {
   default = 9090
 }
-variable "fargate_cpu" {
-  default = 256
-}
-
-variable "fargate_memory" {
-  default = 512
-}
-
 variable "desired_count" {
   default = 1
 }
@@ -47,42 +39,26 @@ variable "alb_deregistration_delay" {
   default = 10
 }
 
-# Github
-variable "gh_repo" {
-}
-
-variable "gh_org" {
-}
-
-variable "gh_token" {
-}
-
-variable "gh_secret" {
-  type = string
-}
-
 # S3
 variable "s3_logging" {
   type = map(string)
 }
 
-variable "s3_artifacts" {
+variable "repository_url" {
+  type = string
+}
+
+variable "kms_id" {
+  type = string
+}
+
+variable "secrets" {
   type = map(string)
+  description = "Options are id and arn"
 }
 
-variable "kms_arn" {}
-
-variable "connections" {
-  type = list(object({
-    host      = string
-    port      = number
-    protocol  = string
-    priority  = number
-    qualifier = string
-  }))
-}
-
-## Accounts to be subscribed to SNS Topic
-variable "account" {
+variable "params" {
   type = map(string)
+  description = "Available Keys are id and arn"
 }
+
