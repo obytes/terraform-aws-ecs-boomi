@@ -1,12 +1,3 @@
-//module "base" {
-//  source             = "../../stacks/aws/base-env"
-//  prefix             = local.prefix
-//  common_tags        = local.common_tags
-//  net_cidr_block     = var.cidr_block
-//  net_private_ranges = var.private_ranges
-//  net_public_ranges  = var.public_ranges
-//}
-
 module "common" {
   source             = "../../stacks/aws/common-env"
   prefix             = local.prefix
