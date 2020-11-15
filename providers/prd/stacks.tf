@@ -14,6 +14,8 @@ module "common" {
 
 
 module "boomi" {
+  depends_on = [module.common]
+
   source             = "../../stacks/aws/boomi"
   prefix             = local.prefix
   common_tags        = local.common_tags

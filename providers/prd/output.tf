@@ -34,11 +34,6 @@ output "kms_id" {
 # BOOMI MODULE #
 ################
 
-output "boomi_credentials" {
-  value     = module.boomi.credentials
-  sensitive = true
-}
-
 output "security_group_id" {
   value = module.boomi.security_group_id
 }

@@ -2,13 +2,6 @@ output "security_group_id" {
   value = module.molecule.security_group_id
 }
 
-output "credentials" {
-  value = {
-    id     = aws_iam_access_key.this.id
-    secret = aws_iam_access_key.this.secret
-  }
-}
-
 output "service_name" {
   value = module.molecule.service_name
 }
