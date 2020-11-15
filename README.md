@@ -45,8 +45,14 @@ Find instructions to setup this on: https://www.obytes.com/blog/sending-notifica
 |------|------|-------------|
 | ecs | map(string) |ECS Output form the common module which have the `arn` and `name`.|
 | kms_id | string | The KMS Id which will be used by the ECS Container Task definition. |
-|parameters_secret_manager | map(string) | The ARN and the id of the applied parameters AWS secrets manager|
+|parameters_secret_manager | map(string) | The ARN and the id of the applied parameters AWS secret manager|
+|secrets_secret_manager | map(string) | The ARN and the id of the applied secrets e.g. `BOOMI_ACCOUNTID` and `INSTALL_TOKEN` AWS secret manager|
 |repository_url | string | The repository URL where the task definition will pull the Docker image.|
-|S3_logging| map(string) | A map for the S3 logging bucket created by the common which includes the ID,ARN and Bucket Name|
+|security_group_id | string | The SG id for the Boomi Atom container.|
+|S3_logging | map(string) | A map for the S3 logging bucket created by the common which includes the ID,ARN and Bucket Name|
+|service_name | string | The ECS service name for Boomi Atom |
+|file_system_id | string | EFS filesystem ID | 
+|aws_efs_access_point | string | File System Access Point ID
+
 
 <!--- END_TF_DOCS --->
