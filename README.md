@@ -7,7 +7,7 @@ Terraform module setting up and provisioning Boomi dockerized infrastructure
  - Run terraform plan/apply for the common module to set up all the required resources in order to to run the Boomi ecs container
  - Run terraform plan/apply for the boomi module to create the boomi ecs container and map it to your boomi account.
 
-Find instructions to setup this on: https://www.obytes.com/blog/sending-notifications-to-slack-using-aws-chatbot
+Find instructions to setup this on: [provisioning-boomi-on-aws-ecs](https://obytes.com/blog/provisioning-boomi-on-aws-ecs)
 
 <!--- BEGIN_TF_DOCS --->
 ## Requirements
