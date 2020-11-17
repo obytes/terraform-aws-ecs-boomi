@@ -3,9 +3,60 @@
 Terraform module setting up and provisioning Boomi dockerized infrastructure
 
 ### Setup
- - Create terraform.tfvars to define the required variables mentioned below under providers/prd
+ - Clone the Repo
+```bash
+git clone https://github.com/obytes/boomi-aws-ecs.git
+```
+ - Create terraform.tfvars providers/prd
+```bash
+cd boomi-aws-ecs/providers/prd/
+touch terraform.tfvars
+```
+ - Populate the variables values required, please refer below to the **Inputs** section, e.g.
+```bash
+# CD to the PRD provider dir
+cd boomi-aws-ecs/providers/prd
+# Populate the required variables, please don't forget to escape the double quotes
+echo vpc_id = \"vpc-112233445566\" >> terraform.tfvars
+```
+
+ - Build the Atom docker image
+ ```bash
+# CD to repo directory
+cd boomi-aws-ecs 
+# Build the image
+#docker build -t <image_name>:<tag> .
+docker build -t boomi:latest
+```
+
  - Run terraform plan/apply for the common module to set up all the required resources in order to to run the Boomi ecs container
+ ```bash
+# CD to the PRD provider dir
+cd boomi-aws-ecs/providers/prd/
+terraform init
+terraform plan --target module.common
+terraform apply --target module.common
+ ```
+
+ - Push the docker image to ecr created by applying the `terraform apply --target module.common`
+    - Note: in our [task-definition](https://github.com/obytes/boomi-aws-ecs/blob/95eae30eb9b4a584f9b7ffbddcfb2d5b753a625a/modules/boomi/molecule/ecs_task_definition.tf#L18) we are referring to a dynamic tag based on the `var.env` but this can be changed if you would like.
+ ```bash
+aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin <AWS_ACCOUNT_ID>.dkr.ecr.us-east-1.amazonaws.com
+
+docker tag boomi:latest <AWS_ACCOUNT_ID>.dkr.ecr.us-east-1.amazonaws.com/prd-boomi-useast1:<tag>
+
+docker push <AWS_ACCOUNT_ID>.dkr.ecr.us-east-1.amazonaws.com/prd-boomi-useast1:<tag>
+ ```
+
+ - Adding the required secrets **INSTALL_TOKEN** and **BOOMI_ACCOUNTID** to `prd-boomi-useast1-secs` secrets manager on AWS console using the key/value pair.
+ 
  - Run terraform plan/apply for the boomi module to create the boomi ecs container and map it to your boomi account.
+ ```bash
+# CD to the PRD provider dir
+cd boomi-aws-ecs/providers/prd/
+terraform plan --target module.boomi
+terraform apply --target module.boomi
+ ```
 
 Find instructions to setup this on: [provisioning-boomi-on-aws-ecs](https://obytes.com/blog/provisioning-boomi-on-aws-ecs)
 
