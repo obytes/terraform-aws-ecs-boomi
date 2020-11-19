@@ -137,3 +137,7 @@ override.tf.json
 # example: *tfplan*
 
 # End of https://www.toptal.com/developers/gitignore/api/terraform,pycharm
+providers/*
+providers
+modules/aws
+modules/aws/*
