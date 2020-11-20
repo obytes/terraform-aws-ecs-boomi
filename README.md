@@ -1,3 +1,29 @@
+## Usage 
+```hcl
+module "boomi_node" {
+  source = "git::https://github.com/obytes/boomi-aws-ecs.git?ref=tags/v0.0.2"
+  env = var.env
+  project_name = var.project_name
+  aws_profile = var.aws_profile
+  region = var.region
+  vpc_id = var.vpc_id
+  private_subnet_ids = var.private_subnet_ids
+  public_subnet_ids = var.public_subnet_ids
+  default_sg_id = var.default_sg_id
+  allowed_cidr_blocks = var.allowed_cidr_blocks
+  ssh_ec2_key_name = var.ssh_ec2_key_name
+  instance_type = var.instance_type
+  min_size = var.min_size
+  max_size = var.max_size
+  desired_capacity = var.desired_capacity
+  desired_count = var.desired_count
+  container_name = var.container_name
+  atom_port = var.atom_port
+  task_definition_cpu = var.task_definition_cpu
+  task_definition_memory = var.task_definition_memory
+  allowed_security_group_ids = var.allowed_security_group_ids
+}
+```
 ## Requirements
 
 | Name | Version |
