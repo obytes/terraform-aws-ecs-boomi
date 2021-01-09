@@ -15,12 +15,9 @@ provider "aws" {
 # Locals and Data Sources
 # ----------------------------------------------------------------------------------------------------------------------
 locals {
-  prefix = "${var.env}-${var.project_name}-${replace(data.aws_region.current.name, "-", "")}"
 
   common_tags = {
-    env          = var.env
     project_name = var.project_name
-    region       = var.region
   }
 }
 
@@ -46,11 +43,9 @@ data "aws_kms_alias" "secrets_manager" {
 
 module "ecs-cluster" {
   source = "./modules/ecs-cluster"
-  prefix = local.prefix
+  prefix = var.prefix
   common_tags = local.common_tags
-  env = var.env
   project_name = var.project_name
-  region = var.region
   private_subnet_ids = var.private_subnet_ids
   public_subnet_ids = var.public_subnet_ids
   vpc_id = var.vpc_id
@@ -62,6 +57,7 @@ module "ecs-cluster" {
   min_size = var.min_size
   max_size = var.max_size
   desired_capacity = var.desired_capacity
+  s3_logging  = var.s3_logging
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -74,8 +70,8 @@ module "ecs-cluster" {
 
 module "boomi_node" {
   source = "./modules/boomi_node"
-  prefix = join("-", [local.prefix, "boomi"])
-  common_tags = merge(local.common_tags, map("Module", "Boomi"))
+  prefix = var.prefix
+  common_tags = merge(local.common_tags, map("Module", "Atom Node"))
   ecs_cluster_name = module.ecs-cluster.ecs
   container_name = var.container_name
   desired_count    = var.desired_count
@@ -87,6 +83,7 @@ module "boomi_node" {
   kms = module.ecs-cluster.kms
   parameters = module.ecs-cluster.parameters_secret_manager
   repository_url = module.ecs-cluster.repository_url
+  image_tag = var.image_tag
   secrets = module.ecs-cluster.secrets_secret_manager
 }
 

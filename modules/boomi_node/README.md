@@ -1,7 +1,3 @@
-## Requirements
-
-No requirements.
-
 ## Providers
 
 | Name | Version |
@@ -19,6 +15,7 @@ No requirements.
 | container\_name | The Container Name | `string` | n/a | yes |
 | desired\_count | The number of instances of the task definition to place and keep running. | `number` | n/a | yes |
 | ecs\_cluster\_name | A map of strings for the ECS cluster, valid keys are name and ARN | `map(string)` | n/a | yes |
+| image\_tag | The image tag used by the ECS Task definition to create Atom Container | `string` | `"latest"` | no |
 | kms | A map of string for the KMS, valid keys are id and ARN | `map(string)` | n/a | yes |
 | parameters | A map of AWS Secret Manager parameters, valid values are name, id and ARN | `map(string)` | n/a | yes |
 | prefix | A prefix string used to name the resources | `string` | n/a | yes |

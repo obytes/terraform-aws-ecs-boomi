@@ -3,25 +3,16 @@
 #==========================#
 variable "prefix" {
   type = string
-  description = "Prefix used for naming convention"
+  description = "A prefix string will be used to structure the ID/Name of resource "
 }
 variable "common_tags" {
   type = map(string)
   description = "a map of shared tags to be used by the modules' resources"
 }
-variable "env" {
-  default = "prd"
-  description = "Environment Name such as qa,prd,adm. Its recommended to keep it 3 chars long max as this will be used to structure the ID/Name of resources"
-}
 
 variable "project_name" {
   default = "boomi"
   description = "Project Name . Its recommended to keep it 3 chars long max as this will be used to structure the ID/Name of resources"
-}
-
-variable "region" {
-  default = "us-east-1"
-  description = "The Region name, This will be edited to removed the hyphens such as useast1 and used by the ID/Name of resources"
 }
 
 variable "aws_profile" {
@@ -81,3 +72,10 @@ variable "desired_capacity" {
   type = number
   description = "The number of Amazon EC2 instances that should be running in the group"
 }
+
+variable "s3_logging" {
+  type = map(string)
+  description = "AWS S3 Bucket details used by the modules, required keys are bucket_name and bucket_arn"
+}
+
+

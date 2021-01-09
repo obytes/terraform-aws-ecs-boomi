@@ -1,7 +1,3 @@
-## Requirements
-
-No requirements.
-
 ## Providers
 
 | Name | Version |
@@ -18,15 +14,14 @@ No requirements.
 | common\_tags | a map of shared tags to be used by the modules' resources | `map(string)` | n/a | yes |
 | default\_sg\_id | Default SG ID for the VPC | `string` | n/a | yes |
 | desired\_capacity | The number of Amazon EC2 instances that should be running in the group | `number` | n/a | yes |
-| env | Environment Name such as qa,prd,adm. Its recommended to keep it 3 chars long max as this will be used to structure the ID/Name of resources | `string` | `"prd"` | no |
 | instance\_type | Instance Type, e.g. t2.micro | `string` | n/a | yes |
 | max\_size | The maximum size of the auto scale group | `number` | n/a | yes |
 | min\_size | The minimum size of the auto scale group | `number` | n/a | yes |
-| prefix | Prefix used for naming convention | `string` | n/a | yes |
+| prefix | A prefix string will be used to structure the ID/Name of resource | `string` | n/a | yes |
 | private\_subnet\_ids | A list of strings contains the IDs of the private subnets in the vpc | `list(string)` | n/a | yes |
 | project\_name | Project Name . Its recommended to keep it 3 chars long max as this will be used to structure the ID/Name of resources | `string` | `"boomi"` | no |
 | public\_subnet\_ids | A list of strings contains the IDs of the public subnets in the vpc | `list(string)` | n/a | yes |
-| region | The Region name, This will be edited to removed the hyphens such as useast1 and used by the ID/Name of resources | `string` | `"us-east-1"` | no |
+| s3\_logging | AWS S3 Bucket details used by the modules, required keys are bucket\_name and bucket\_arn | `map(string)` | n/a | yes |
 | ssh\_ec2\_key\_name | the name of the pair key to access the ec2 | `string` | n/a | yes |
 | vpc\_id | VPC ID, example vpc-1122334455 | `string` | n/a | yes |
 

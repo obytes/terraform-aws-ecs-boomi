@@ -2,13 +2,13 @@
 # ecs-cluster MODULE #
 #################
 
-output "s3_logging" {
-  value = {
-    id      = module.ecs-cluster.s3_logging.id
-    bucket  = module.ecs-cluster.s3_logging.bucket
-    arn     = module.ecs-cluster.s3_logging.arn
-  }
-}
+//output "s3_logging" {
+//  value = {
+//    id      = module.ecs-cluster.s3_logging.id
+//    bucket  = module.ecs-cluster.s3_logging.bucket
+//    arn     = module.ecs-cluster.s3_logging.arn
+//  }
+//}
 
 output "repository_url" {
   value = module.ecs-cluster.repository_url

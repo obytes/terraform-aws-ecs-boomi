@@ -32,10 +32,10 @@ output "kms" {
   }
 }
 
-output "s3_logging" {
-  value = {
-    id = aws_s3_bucket.bucket.id
-    arn = aws_s3_bucket.bucket.arn
-    bucket = aws_s3_bucket.bucket.bucket
-  }
-}
+//output "s3_logging" {
+//  value = {
+//    id = aws_s3_bucket.bucket.id
+//    arn = aws_s3_bucket.bucket.arn
+//    bucket = aws_s3_bucket.bucket.bucket
+//  }
+//}

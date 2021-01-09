@@ -63,39 +63,21 @@ resource "aws_kms_alias" "default" {
 # ----------------------------------------------------------------------------------------------------------------------
 # S3 Logging Bucket
 # ----------------------------------------------------------------------------------------------------------------------
-resource "aws_s3_bucket" "bucket" {
-  bucket = join("-", [var.prefix, "logs"])
-  acl    = "log-delivery-write"
 
-  tags = merge(var.common_tags, map("visibility", "internal", "usage", "logging"))
-
-  server_side_encryption_configuration {
-    rule {
-      apply_server_side_encryption_by_default {
-        sse_algorithm = "AES256"
-      }
-    }
-  }
-
-  lifecycle_rule {
-    id      = "cleanup"
-    enabled = true
-
-    expiration {
-      days = 10
-    }
-  }
+resource "aws_s3_bucket_object" "alb_folder" {
+  bucket = var.s3_logging["bucket_name"]
+  key = "/alb/"
 }
 
 resource "aws_s3_bucket_policy" "alb_policy" {
-  bucket = aws_s3_bucket.bucket.id
+  bucket = var.s3_logging["bucket_name"]
   policy = data.aws_iam_policy_document.b.json
 }
 
 data "aws_iam_policy_document" "b" {
   statement {
     actions   = ["s3:PutObject"]
-    resources = ["${aws_s3_bucket.bucket.arn}/alb/*"]
+    resources = ["${var.s3_logging["bucket_arn"]}/alb/*"]
 
     principals {
       identifiers = [data.aws_elb_service_account.current.arn]
@@ -108,6 +90,7 @@ data "aws_iam_policy_document" "b" {
 # AWS Secrets [Secrets and Parameters]
 # ----------------------------------------------------------------------------------------------------------------------
 # SECRETS: Should be edited manually from AWS console
+# The required secrets to be added via the console are BOOMI_ACCOUNTID and INSTALL_TOKEN
 resource "aws_secretsmanager_secret" "secrets" {
   name = "${var.prefix}-secrets"
 }

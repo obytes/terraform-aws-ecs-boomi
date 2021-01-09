@@ -2,8 +2,6 @@
 ```hcl
 module "boomi_node" {
   source = "git::https://github.com/obytes/boomi-aws-ecs.git?ref=tags/v0.0.2"
-  env = var.env
-  project_name = var.project_name
   aws_profile = var.aws_profile
   region = var.region
   vpc_id = var.vpc_id
@@ -22,8 +20,12 @@ module "boomi_node" {
   task_definition_cpu = var.task_definition_cpu
   task_definition_memory = var.task_definition_memory
   allowed_security_group_ids = var.allowed_security_group_ids
+  prefix = var.prefix
+  image_tag = var.image_tag
+  s3_logging = var.s3_logging
 }
 ```
+
 ## Requirements
 
 | Name | Version |
@@ -49,14 +51,16 @@ module "boomi_node" {
 | default\_sg\_id | Default SG ID for the VPC | `string` | n/a | yes |
 | desired\_capacity | The number of Amazon EC2 instances that should be running in the group | `number` | n/a | yes |
 | desired\_count | The number of instances of the task definition to place and keep running. | `number` | n/a | yes |
-| env | Environment Name such as qa,prd,adm. Its recommended to keep it 3 chars long max as this will be used to structure the ID/Name of resources | `string` | `"prd"` | no |
+| image\_tag | The image tag used by the ECS Task definition to create Atom Container | `string` | `"latest"` | no |
 | instance\_type | Instance Type, e.g. t2.micro | `string` | n/a | yes |
 | max\_size | The maximum size of the auto scale group | `number` | n/a | yes |
 | min\_size | The minimum size of the auto scale group | `number` | n/a | yes |
+| prefix | A prefix string will be used to structure the ID/Name of resource | `string` | n/a | yes |
 | private\_subnet\_ids | A list of strings contains the IDs of the private subnets in the vpc | `list(string)` | n/a | yes |
-| project\_name | Project Name . Its recommended to keep it 3 chars long max as this will be used to structure the ID/Name of resources | `string` | `"boomi"` | no |
+| project\_name | Project Name . This is used by the local.common\_tags to tag the resources | `string` | `"boomi"` | no |
 | public\_subnet\_ids | A list of strings contains the IDs of the public subnets in the vpc | `list(string)` | n/a | yes |
-| region | The Region name, This will be edited to removed the hyphens such as useast1 and used by the ID/Name of resources | `string` | `"us-east-1"` | no |
+| region | AWS Region name used by the AWS Terraform Provider | `string` | n/a | yes |
+| s3\_logging | AWS S3 Bucket details used by the modules, required keys are bucket\_name and bucket\_arn | `map(string)` | n/a | yes |
 | ssh\_ec2\_key\_name | the name of the pair key to access the ec2 | `string` | n/a | yes |
 | task\_definition\_cpu | CPU for the task definition | `number` | `256` | no |
 | task\_definition\_memory | Memory for the task definition | `number` | `512` | no |
@@ -76,4 +80,5 @@ module "boomi_node" {
 | secrets\_secret\_manager | n/a |
 | security\_group\_id | n/a |
 | service\_name | n/a |
+
 

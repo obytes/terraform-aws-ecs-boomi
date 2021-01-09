@@ -1,24 +1,23 @@
 #==========================#
 #   Common details         #
 #==========================#
-variable "env" {
-  default = "prd"
-  description = "Environment Name such as qa,prd,adm. Its recommended to keep it 3 chars long max as this will be used to structure the ID/Name of resources"
+variable "prefix" {
+  type = string
+  description = "A prefix string will be used to structure the ID/Name of resource "
 }
-
 variable "project_name" {
   default = "boomi"
-  description = "Project Name . Its recommended to keep it 3 chars long max as this will be used to structure the ID/Name of resources"
-}
-
-variable "region" {
-  default = "us-east-1"
-  description = "The Region name, This will be edited to removed the hyphens such as useast1 and used by the ID/Name of resources"
+  description = "Project Name . This is used by the local.common_tags to tag the resources"
 }
 
 variable "aws_profile" {
   type = string
   description = "The AWS Profile name with the required permissions stored in ~/.aws/credentials used by Terraform to create the resources"
+}
+
+variable "region" {
+  type = string
+  description = "AWS Region name used by the AWS Terraform Provider"
 }
 
 #==============#
@@ -111,4 +110,15 @@ variable "task_definition_memory" {
   type = number
   description = "Memory for the task definition"
   default = 512
+}
+
+variable "s3_logging" {
+  type = map(string)
+  description = "AWS S3 Bucket details used by the modules, required keys are bucket_name and bucket_arn"
+}
+
+variable "image_tag" {
+  type = string
+  default = "latest"
+  description = "The image tag used by the ECS Task definition to create Atom Container"
 }

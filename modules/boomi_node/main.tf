@@ -259,7 +259,7 @@ resource "aws_ecs_task_definition" "this" {
   container_definitions = <<DEFINITION
 [
   {
-    "image": "${var.repository_url}:${var.common_tags["env"]}",
+    "image": "${var.repository_url}:${var.image_tag}",
     "name": "${var.container_name}",
     "networkMode": "awsvpc",
     "entryPoint": [
@@ -334,7 +334,7 @@ resource "aws_ecs_task_definition" "this" {
     ],
     "dockerLabels":
       {
-        "env":"${var.common_tags["env"]}"
+        "ContainerName":"${var.container_name}"
       }
   }
 ]

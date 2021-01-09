@@ -83,3 +83,10 @@ variable "kms" {
   type = map(string)
   description = "A map of string for the KMS, valid keys are id and ARN"
 }
+
+variable "image_tag" {
+  type = string
+  default = "latest"
+  description = "The image tag used by the ECS Task definition to create Atom Container"
+}
+
