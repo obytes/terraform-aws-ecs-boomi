@@ -2,6 +2,7 @@
 ```hcl
 module "boomi_node" {
   source = "git::https://github.com/obytes/boomi-aws-ecs.git?ref=tags/v0.0.2"
+  allowed_cidr_blocks = var.allowed_cidr_blocks
   aws_profile = var.aws_profile
   region = var.region
   vpc_id = var.vpc_id
