@@ -1,7 +1,11 @@
+## Overview 
+
+Preparing the AWS Infrastructure for Boomi Atom installation on ECS Fargate
+
 ## Usage 
 ```hcl
 module "boomi_node" {
-  source = "git::https://github.com/obytes/boomi-aws-ecs.git?ref=tags/v0.0.4"
+  source = "git::https://github.com/obytes/terraform-aws-ecs-boomi.git?ref=tags/v0.0.4"
   aws_profile = var.aws_profile
   region = var.region
   vpc_id = var.vpc_id
