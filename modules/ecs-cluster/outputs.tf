@@ -25,14 +25,17 @@ output "parameters_secret_manager" {
     arn = aws_secretsmanager_secret.parameters.arn
   }
 }
-output "kms_id" {
-  value = aws_kms_key.default.id
-}
-
-output "s3_logging" {
+output "kms" {
   value = {
-    id = module.s3_logging.id
-    arn = module.s3_logging.arn
-    bucket = module.s3_logging.bucket
+    id = aws_kms_key.default.id
+    arn = aws_kms_key.default.arn
   }
 }
+
+//output "s3_logging" {
+//  value = {
+//    id = aws_s3_bucket.bucket.id
+//    arn = aws_s3_bucket.bucket.arn
+//    bucket = aws_s3_bucket.bucket.bucket
+//  }
+//}
