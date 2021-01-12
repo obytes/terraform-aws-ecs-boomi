@@ -90,3 +90,12 @@ variable "image_tag" {
   description = "The image tag used by the ECS Task definition to create Atom Container"
 }
 
+variable "cwa_tag" {
+  type = string
+  description = "Docker image tag for the CloudWatch Agent"
+}
+
+variable "cloudwatch_container_name" {
+  type = string
+  description = "CloudWatch Agent container name"
+}

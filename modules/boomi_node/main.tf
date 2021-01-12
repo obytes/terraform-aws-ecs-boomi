@@ -4,12 +4,29 @@
 locals {
   volume_name = "molecule-storage"
   templates = join("/", [path.module, "templates"])
+  cw_agent_config = {
+    LOG_GROUP_NAME = aws_cloudwatch_log_group.boomi_log_files.name
+    CW_REGION_NAME = data.aws_region.current.name
+    LOG_STREAM_NAME = var.prefix
+  }
 }
 
 data "aws_region" "current" {}
 
 data "aws_caller_identity" "current" {}
 
+# ----------------------------------------------------------------------------------------------------------------------
+# AWS SecretsManager
+# ----------------------------------------------------------------------------------------------------------------------
+# AWS Agent Config File
+resource "aws_secretsmanager_secret" "cloudwatch-config-file" {
+  name = "${var.prefix}-cwa-cfg-file"
+}
+
+resource "aws_secretsmanager_secret_version" "config-file" {
+  secret_id = aws_secretsmanager_secret.cloudwatch-config-file.id
+  secret_string = templatefile(join("/", [local.templates, "cwa_config.json"]), { for key, value in local.cw_agent_config : key => value })
+}
 # ----------------------------------------------------------------------------------------------------------------------
 # AWS Security Group and rules
 # ----------------------------------------------------------------------------------------------------------------------
@@ -152,6 +169,21 @@ resource "aws_security_group_rule" "allow_sgs_to_efs" {
 # ----------------------------------------------------------------------------------------------------------------------
 resource "aws_cloudwatch_log_group" "this" {
   name              = "/aws/ecs/${var.prefix}"
+  retention_in_days = 30
+
+  tags = var.common_tags
+}
+
+## Log Group for CW Agent sidecar container
+resource "aws_cloudwatch_log_group" "cwa" {
+  name              = "/aws/ecs/${var.prefix}-cw-logs"
+  retention_in_days = 7
+
+  tags = var.common_tags
+}
+
+resource "aws_cloudwatch_log_group" "boomi_log_files" {
+  name              = "${var.prefix}-log-files"
   retention_in_days = 30
 
   tags = var.common_tags
@@ -336,6 +368,51 @@ resource "aws_ecs_task_definition" "this" {
       {
         "ContainerName":"${var.container_name}"
       }
+  },
+  {
+    "name": "${var.cloudwatch_container_name}",
+    "image": "${var.repository_url}:${var.cwa_tag}",
+    "entryPoint": [
+      "sh", "CWA_entrypoint.sh"
+    ],
+    "command": [
+      "/opt/aws/amazon-cloudwatch-agent/bin/start-amazon-cloudwatch-agent"
+      ],
+    "environment": [
+      {
+        "name": "CONFIG_FILE_SECRET_ID",
+        "value": "${aws_secretsmanager_secret.cloudwatch-config-file.name}"
+      },
+      {
+        "name": "AWS_DEFAULT_REGION",
+        "value": "${data.aws_region.current.name}"
+      }
+    ],
+    "mountPoints": [
+        {
+            "containerPath": "/var/boomi",
+            "sourceVolume": "${local.volume_name}"
+        },
+        {
+          "containerPath": "/sys/fs/cgroup",
+          "sourceVolume": "cgroup",
+          "readOnly": true
+        }
+    ],
+    "essential": true,
+    "privileged": false,
+    "logConfiguration": {
+      "logDriver": "awslogs",
+      "options": {
+        "awslogs-group": "${aws_cloudwatch_log_group.cwa.name}",
+        "awslogs-region": "${data.aws_region.current.name}",
+        "awslogs-stream-prefix": "${var.prefix}-log"
+      }
+    },
+    "dockerLabels":
+      {
+        "name":"${var.cloudwatch_container_name}"
+      }
   }
 ]
 DEFINITION
@@ -438,6 +515,7 @@ data "aws_iam_policy_document" "policy" {
     resources = [
       var.secrets["arn"],
       var.parameters["arn"],
+      aws_secretsmanager_secret.cloudwatch-config-file.arn
     ]
   }
 }

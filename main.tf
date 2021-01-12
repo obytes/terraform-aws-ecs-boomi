@@ -85,5 +85,7 @@ module "boomi_node" {
   repository_url = module.ecs-cluster.repository_url
   image_tag = var.image_tag
   secrets = module.ecs-cluster.secrets_secret_manager
+  cloudwatch_container_name = var.cloudwatch_container_name
+  cwa_tag = var.cwa_tag
 }
 

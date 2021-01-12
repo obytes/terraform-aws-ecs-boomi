@@ -27,6 +27,8 @@ module "boomi_node" {
   prefix = var.prefix
   image_tag = var.image_tag
   s3_logging = var.s3_logging
+  cloudwatch_container_name = var.cloudwatch_container_name
+  cwa_tag = var.cwa_tag
 }
 ```
 

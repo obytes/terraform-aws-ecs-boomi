@@ -122,3 +122,19 @@ variable "image_tag" {
   default = "latest"
   description = "The image tag used by the ECS Task definition to create Atom Container"
 }
+
+#===========#
+# CWA Boomi #
+#===========#
+
+variable "cwa_tag" {
+  type = string
+  description = "Docker image tag for the CloudWatch Agent"
+  default = "cwa"
+}
+
+variable "cloudwatch_container_name" {
+  type = string
+  description = "CloudWatch Agent container name"
+}
+
