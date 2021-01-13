@@ -92,12 +92,12 @@ data "aws_iam_policy_document" "b" {
 # SECRETS: Should be edited manually from AWS console
 # The required secrets to be added via the console are BOOMI_ACCOUNTID and INSTALL_TOKEN
 resource "aws_secretsmanager_secret" "secrets" {
-  name = "${var.prefix}-secretss"
+  name = "${var.prefix}-secretsc"
 }
 
 # PARAMETERS
 resource "aws_secretsmanager_secret" "parameters" {
-  name = "${var.prefix}-parameterss"
+  name = "${var.prefix}-parameters"
 }
 
 resource "aws_secretsmanager_secret_version" "parameters" {
