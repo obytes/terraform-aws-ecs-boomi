@@ -5,7 +5,7 @@ Preparing the AWS Infrastructure for Boomi Atom installation on ECS Fargate
 ## Usage 
 ```hcl
 module "boomi_node" {
-  source = "git::https://github.com/obytes/terraform-aws-ecs-boomi.git?ref=tags/v0.0.4"
+  source = "git::https://github.com/obytes/terraform-aws-ecs-boomi.git?ref=tags/v0.0.5"
   aws_profile = var.aws_profile
   region = var.region
   vpc_id = var.vpc_id
@@ -27,6 +27,8 @@ module "boomi_node" {
   prefix = var.prefix
   image_tag = var.image_tag
   s3_logging = var.s3_logging
+  cloudwatch_container_name = var.cloudwatch_container_name
+  cwa_tag = var.cwa_tag
 }
 ```
 
@@ -51,7 +53,9 @@ module "boomi_node" {
 | allowed\_security\_group\_ids | A list of security group IDs to have access to the container | `list(string)` | `[]` | no |
 | atom\_port | The port number for the Atom which is defaulted to 9090 | `number` | `9090` | no |
 | aws\_profile | The AWS Profile name with the required permissions stored in ~/.aws/credentials used by Terraform to create the resources | `string` | n/a | yes |
+| cloudwatch\_container\_name | CloudWatch Agent container name | `string` | n/a | yes |
 | container\_name | The Container Name | `string` | `"atom_node"` | no |
+| cwa\_tag | Docker image tag for the CloudWatch Agent | `string` | `"cwa"` | no |
 | default\_sg\_id | Default SG ID for the VPC | `string` | n/a | yes |
 | desired\_capacity | The number of Amazon EC2 instances that should be running in the group | `number` | n/a | yes |
 | desired\_count | The number of instances of the task definition to place and keep running. | `number` | n/a | yes |
