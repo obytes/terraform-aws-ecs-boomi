@@ -138,3 +138,24 @@ variable "cloudwatch_container_name" {
   description = "CloudWatch Agent container name"
 }
 
+#=========#
+# CHATBOT #
+#=========#
+
+variable "slack_channel_id" {
+  type = string
+  description = "The Slack channel ID where AWS Chatbot would post the messages"
+  default = ""
+}
+
+variable "slack_workspace_id" {
+  type = string
+  description = "The Slack workspace/organization ID"
+  default = ""
+}
+
+variable "is_chatbot_enabled" {
+  type = bool
+  default = false
+  description = "A boolean variable for conditional creation of chatbot module"
+}

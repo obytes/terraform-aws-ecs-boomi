@@ -165,6 +165,34 @@ resource "aws_security_group_rule" "allow_sgs_to_efs" {
   to_port           = 2049
 }
 # ----------------------------------------------------------------------------------------------------------------------
+# AWS SNS
+# ----------------------------------------------------------------------------------------------------------------------
+resource "aws_sns_topic" "cloudwatch_alarms" {
+  name = "${var.prefix}-cw-alarms"
+  tags = var.common_tags
+}
+
+resource "aws_sns_topic_policy" "this" {
+  arn = aws_sns_topic.cloudwatch_alarms.arn
+  policy = data.aws_iam_policy_document.this.json
+}
+data "aws_iam_policy_document" "this" {
+  statement {
+    sid = "AllowCloudWatchAlarms"
+    principals {
+      identifiers = ["cloudwatch.amazonaws.com"]
+      type = "Service"
+    }
+    effect = "Allow"
+    actions = [
+      "sns:Publish"
+    ]
+    resources = [
+      aws_sns_topic.cloudwatch_alarms.arn
+    ]
+  }
+}
+# ----------------------------------------------------------------------------------------------------------------------
 # AWS Cloudwatch
 # ----------------------------------------------------------------------------------------------------------------------
 resource "aws_cloudwatch_log_group" "this" {
@@ -186,6 +214,34 @@ resource "aws_cloudwatch_log_group" "boomi_log_files" {
   name              = "${var.prefix}-log-files"
   retention_in_days = 30
 
+  tags = var.common_tags
+}
+
+resource "aws_cloudwatch_log_metric_filter" "boomi_metric_filter_error_401" {
+  log_group_name = aws_cloudwatch_log_group.boomi_log_files.name
+  name = "${aws_cloudwatch_log_group.boomi_log_files.name}-filter"
+  pattern = "{$.Error >= 400}"
+  metric_transformation {
+    name = "ErrorGreaterThan400"
+    namespace = "BOOMI_METRIC"
+    value = "1"
+    default_value = "0"
+  }
+}
+
+resource "aws_cloudwatch_metric_alarm" "boomi_metric_alarm_http_401" {
+  alarm_name = "${var.prefix}-boomi-http-401"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods = 1
+  metric_name = aws_cloudwatch_log_metric_filter.boomi_metric_filter_error_401.metric_transformation[0].name
+  namespace = "BOOMI_METRIC"
+  period = 60
+  statistic = "Average"
+  threshold = 0
+  datapoints_to_alarm = 1
+  alarm_description = "Alarm to be triggered if the number of HTTP_401 is greater than 0 for the last minute"
+  treat_missing_data = "missing"
+  alarm_actions = [aws_sns_topic.cloudwatch_alarms.arn]
   tags = var.common_tags
 }
 # ----------------------------------------------------------------------------------------------------------------------

@@ -13,3 +13,7 @@ output "file_system_id" {
 output "aws_efs_access_point" {
   value = aws_efs_access_point.this.id
 }
+
+output "cw_sns_arn" {
+  value = aws_sns_topic.cloudwatch_alarms.arn
+}
