@@ -3,6 +3,7 @@
 # ----------------------------------------------------------------------------------------------------------------------
 locals {
   templates = join("/", [path.module, "templates"])
+  prefix = join("-", [var.prefix, "chatbot"])
 }
 
 data "aws_region" "current" {
@@ -31,7 +32,7 @@ data "aws_iam_policy_document" "chatbot_policy_doc" {
 
 resource "aws_iam_policy" "chatbot_policy" {
   policy = data.aws_iam_policy_document.chatbot_policy_doc.json
-  name   = join("-", [var.prefix, "policy"])
+  name   = join("-", [local.prefix, "policy"])
 }
 
 data "aws_iam_policy_document" "chatbot_assume_doc" {
@@ -50,7 +51,7 @@ data "aws_iam_policy_document" "chatbot_assume_doc" {
 
 resource "aws_iam_role" "chatbot_role" {
   assume_role_policy = data.aws_iam_policy_document.chatbot_assume_doc.json
-  name               = join("-", [var.prefix, "role"])
+  name               = join("-", [local.prefix, "role"])
 }
 
 resource "aws_iam_role_policy_attachment" "role_policy_attach" {
@@ -66,13 +67,13 @@ data "local_file" "template_file" {
 }
 
 resource "aws_cloudformation_stack" "chatbot_cloudformation" {
-  name = join("-", [var.prefix, "cloudform"])
+  name = join("-", [local.prefix, "cloudform"])
   parameters = {
     SNSTopicArns      = join(",", var.sns_topic_arns)
     SlackChannelID    = var.slack_channel_id
     SlackWorkspaceID  = var.slack_workspace_id
     IAMPolicyArn      = aws_iam_role.chatbot_role.arn
-    ConfigurationName = join("-", [var.prefix, "config"])
+    ConfigurationName = join("-", [local.prefix, "config"])
     LoggingLevel      = "ERROR"
   }
   template_body = data.local_file.template_file.content
