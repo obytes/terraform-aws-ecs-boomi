@@ -5,7 +5,7 @@ Preparing the AWS Infrastructure for Boomi Atom installation on ECS Fargate
 ## Usage 
 ```hcl
 module "boomi_node" {
-  source = "git::https://github.com/obytes/terraform-aws-ecs-boomi.git?ref=tags/v0.0.5"
+  source = "git::https://github.com/obytes/terraform-aws-ecs-boomi.git?ref=tags/v0.0.6"
   aws_profile = var.aws_profile
   region = var.region
   vpc_id = var.vpc_id
@@ -29,6 +29,13 @@ module "boomi_node" {
   s3_logging = var.s3_logging
   cloudwatch_container_name = var.cloudwatch_container_name
   cwa_tag = var.cwa_tag
+  
+  # CHATBOT Conditional Creation
+  
+  # `is_chatbot_enabled` defaulted to `false`, to activate the module creation add the following attribures
+  # is_chatbot_enabled = true
+  # slack_workspace_id = "XXXXXXX"
+  # slack_channel_id = "XXXX"
 }
 ```
 
@@ -61,6 +68,7 @@ module "boomi_node" {
 | desired\_count | The number of instances of the task definition to place and keep running. | `number` | n/a | yes |
 | image\_tag | The image tag used by the ECS Task definition to create Atom Container | `string` | `"latest"` | no |
 | instance\_type | Instance Type, e.g. t2.micro | `string` | n/a | yes |
+| is\_chatbot\_enabled | A boolean variable for conditional creation of chatbot module | `bool` | `false` | no |
 | max\_size | The maximum size of the auto scale group | `number` | n/a | yes |
 | min\_size | The minimum size of the auto scale group | `number` | n/a | yes |
 | prefix | A prefix string will be used to structure the ID/Name of resource | `string` | n/a | yes |
@@ -69,6 +77,8 @@ module "boomi_node" {
 | public\_subnet\_ids | A list of strings contains the IDs of the public subnets in the vpc | `list(string)` | n/a | yes |
 | region | AWS Region name used by the AWS Terraform Provider | `string` | n/a | yes |
 | s3\_logging | AWS S3 Bucket details used by the modules, required keys are bucket\_name and bucket\_arn | `map(string)` | n/a | yes |
+| slack\_channel\_id | The Slack channel ID where AWS Chatbot would post the messages | `string` | `""` | no |
+| slack\_workspace\_id | The Slack workspace/organization ID | `string` | `""` | no |
 | ssh\_ec2\_key\_name | the name of the pair key to access the ec2 | `string` | n/a | yes |
 | task\_definition\_cpu | CPU for the task definition | `number` | `256` | no |
 | task\_definition\_memory | Memory for the task definition | `number` | `512` | no |

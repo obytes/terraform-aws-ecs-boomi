@@ -89,3 +89,13 @@ module "boomi_node" {
   cwa_tag = var.cwa_tag
 }
 
+module "chatbot" {
+  source = "./modules/chatbot"
+  count = var.is_chatbot_enabled ? 1 : 0
+  slack_channel_id = var.slack_channel_id
+  slack_workspace_id = var.slack_workspace_id
+  sns_topic_arns = [module.boomi_node.cw_sns_arn]
+  prefix  = var.prefix
+  common_tags  = merge(local.common_tags, map("Module", "Chatbot"))
+}
+
