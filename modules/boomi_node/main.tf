@@ -220,7 +220,7 @@ resource "aws_cloudwatch_log_group" "boomi_log_files" {
 resource "aws_cloudwatch_log_metric_filter" "boomi_metric_filter_error_401" {
   log_group_name = aws_cloudwatch_log_group.boomi_log_files.name
   name = "${aws_cloudwatch_log_group.boomi_log_files.name}-filter"
-  pattern = "{$.Error >= 400}"
+  pattern = "{$.Code >= 400}"
   metric_transformation {
     name = "ErrorGreaterThan400"
     namespace = "BOOMI_METRIC"
@@ -230,7 +230,7 @@ resource "aws_cloudwatch_log_metric_filter" "boomi_metric_filter_error_401" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "boomi_metric_alarm_http_401" {
-  alarm_name = "${var.prefix}-boomi-http-401"
+  alarm_name = "${var.prefix}-boomi-http-400"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods = 1
   metric_name = aws_cloudwatch_log_metric_filter.boomi_metric_filter_error_401.metric_transformation[0].name
